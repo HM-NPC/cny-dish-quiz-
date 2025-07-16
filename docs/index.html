@@ -1,0 +1,281 @@
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+
+const questions = [
+  {
+    text: "How do you act at reunion dinners?",
+    options: [
+      { text: 'Start the party and make everyone toss Yee Sang louder!', type: 'yeeSang' },
+      { text: 'Quietly help serve food and clean up', type: 'steamedFish' },
+      { text: 'Stick close to grandma and observe quietly', type: 'dumpling' },
+      { text: 'Crack jokes, eat nonstop, and stir up card games', type: 'roastMeat' },
+      { text: 'Hand out well-prepared angpao packets with a checklist', type: 'pineappleTart' },
+      { text: 'Make sure everyone is included, even random cousins', type: 'hotpot' },
+      { text: 'Do everything just like we did last year — tradition first!', type: 'nianGao' },
+      { text: 'Arrive fashionably late with mysterious vibes', type: 'garlicPrawn' }
+    ]
+  },
+  {
+    text: "Your CNY outfit style is…",
+    options: [
+      { text: 'Loud colors, statement pieces, camera-ready always', type: 'yeeSang' },
+      { text: 'Neat and proper, maybe a red polo shirt', type: 'steamedFish' },
+      { text: 'Comfy and casual — stretchy pants, always', type: 'dumpling' },
+      { text: 'Graphic tee, shades, and loud slippers', type: 'roastMeat' },
+      { text: 'Coordinated looks with accessories, maybe cheongsam', type: 'pineappleTart' },
+      { text: 'Classic, flexible — can cook or go out anytime', type: 'hotpot' },
+      { text: 'Same thing I wear every year, timeless and lucky', type: 'nianGao' },
+      { text: 'Unexpectedly cool — no one saw it coming', type: 'garlicPrawn' }
+    ]
+  },
+  {
+    text: "What's your relationship with angpao?",
+    options: [
+      { text: 'Manifesting maximum collection!', type: 'yeeSang' },
+      { text: 'Giving and receiving, but not making a fuss', type: 'steamedFish' },
+      { text: 'I take it, smile, and disappear', type: 'dumpling' },
+      { text: 'Honestly forgot to prepare any this year', type: 'roastMeat' },
+      { text: 'Pre-packed, labeled, and in matching designs', type: 'pineappleTart' },
+      { text: 'Prepped and packed 2 weeks ago in a labelled bag', type: 'hotpot' },
+      { text: 'Reuses past year’s packets, still looks good', type: 'nianGao' },
+      { text: 'Pretends not to care, but always collects silently', type: 'garlicPrawn' }
+    ]
+  },
+  {
+    text: "Your ideal CNY hangout includes…",
+    options: [
+      { text: 'Group Yee Sang tossing, pics or it didn’t happen!', type: 'yeeSang' },
+      { text: 'Peaceful dinner, deep convos', type: 'steamedFish' },
+      { text: 'Couch, snacks, and quiet with cousins', type: 'dumpling' },
+      { text: 'Card games, pineapple tart eating contest', type: 'roastMeat' },
+      { text: 'Curated activities and dress code', type: 'pineappleTart' },
+      { text: 'Potluck and karaoke with 20 people', type: 'hotpot' },
+      { text: 'Just family, same schedule every year', type: 'nianGao' },
+      { text: 'Short, fun, and out before 10PM', type: 'garlicPrawn' }
+    ]
+  },
+  {
+    text: "How do you prepare for CNY?",
+    options: [
+      { text: 'Create mood boards and outfit planners', type: 'yeeSang' },
+      { text: 'Help parents with chores calmly', type: 'steamedFish' },
+      { text: 'Clean room last minute and hide under blanket', type: 'dumpling' },
+      { text: 'Look for snacks first, clean later', type: 'roastMeat' },
+      { text: 'Already packed 2 weeks ago with Excel sheets', type: 'pineappleTart' },
+      { text: 'Prepping guest list and menus on WhatsApp', type: 'hotpot' },
+      { text: 'Following the same exact steps as every year', type: 'nianGao' },
+      { text: 'I wing it. CNY just happens', type: 'garlicPrawn' }
+    ]
+  }
+];
+
+const results = {
+  yeeSang: {
+    name: 'Yee Sang',
+    emoji: '🥢',
+    role: 'The Charismatic Connector',
+    description: 'You bring the HUAT to the table.',
+    strengths: ['Energetic', 'Social', 'Uplifting'],
+    weaknesses: ['Scattered focus', 'Overwhelming for introverts'],
+    goesWellWith: 'Roast Meat',
+    clashesWith: 'Dumpling',
+    lines: [
+      'Toss high, scream louder — you set the tone',
+      'Always ready with an Instagram Boomerang',
+      'Starts convos with anyone (even the cat)',
+      'Thinks quiet is suspicious',
+      'Says “HUAT AHH” before every sentence'
+    ],
+  },
+  steamedFish: {
+    name: 'Steamed Fish',
+    emoji: '🐟',
+    role: 'The Grounded Harmonizer',
+    description: 'Lowkey the backbone of the reunion dinner.',
+    strengths: ['Calm', 'Dependable', 'Emotionally mature'],
+    weaknesses: ['Too passive', 'Avoids spotlight'],
+    goesWellWith: 'Dumpling',
+    clashesWith: 'Pineapple Tart',
+    lines: [
+      'Balances vibes like a pro',
+      'Doesn’t say much, but people listen',
+      'Always helping behind the scenes',
+      'Refills your tea before you even notice',
+      'Brings emotional peace to the table'
+    ],
+  },
+  dumpling: {
+    name: 'Dumpling',
+    emoji: '🥟',
+    role: 'The Gentle Introvert',
+    description: 'Soft on the outside, deep on the inside.',
+    strengths: ['Thoughtful', 'Loyal', 'Emotionally aware'],
+    weaknesses: ['Overthinks', 'Avoids large groups'],
+    goesWellWith: 'Steamed Fish',
+    clashesWith: 'Yee Sang',
+    lines: [
+      'Always brings snacks in their bag',
+      'Fades out mid-party for “toilet break”',
+      'Hears everything, says nothing',
+      'Three unread replies in every group chat',
+      'Makes you feel seen with just one nod'
+    ],
+  },
+  roastMeat: {
+    name: 'Roast Meat',
+    emoji: '🍖',
+    role: 'The Bold Entertainer',
+    description: 'You came to eat and conquer.',
+    strengths: ['Confident', 'Hilarious', 'Unforgettable'],
+    weaknesses: ['Loud', 'Impulsive'],
+    goesWellWith: 'Yee Sang',
+    clashesWith: 'Hotpot',
+    lines: [
+      'Has strong opinions on CNY cookies',
+      'Laughs loud, eats louder',
+      'First to start “chor dai dee”',
+      'Says “I’m on diet” before 3rd plate',
+      'Lowkey offended if no one laughs at their jokes'
+    ],
+  },
+  pineappleTart: {
+    name: 'Pineapple Tart',
+    emoji: '🍍',
+    role: 'The Sweet Overachiever',
+    description: 'Cute, classy, and always prepared.',
+    strengths: ['Polished', 'Organized', 'Multitasker'],
+    weaknesses: ['Perfectionist', 'Gets overwhelmed'],
+    goesWellWith: 'Hotpot',
+    clashesWith: 'Steamed Fish',
+    lines: [
+      'Owns a label maker “for fun”',
+      'Buys gifts *before* CNY starts',
+      'Angpao packets all colour-coordinated',
+      'Makes Google Sheets for the family potluck',
+      'Always smells like cookies and effort'
+    ],
+  },
+  hotpot: {
+    name: 'Hotpot',
+    emoji: '🍲',
+    role: 'The Social Organizer',
+    description: 'The more the merrier — always.',
+    strengths: ['Warm', 'Inclusive', 'Great at multitasking'],
+    weaknesses: ['Can’t say no', 'Spreads self too thin'],
+    goesWellWith: 'Pineapple Tart',
+    clashesWith: 'Roast Meat',
+    lines: [
+      'Says “we should hang out” and means it',
+      'Invites the neighbour’s cousin’s dog',
+      'Has 20 people on their CNY game night list',
+      'Forgets own plans while organizing yours',
+      'Always checking if your bowl’s full'
+    ],
+  },
+  nianGao: {
+    name: 'Nian Gao',
+    emoji: '🧧',
+    role: 'The Steady Traditionalist',
+    description: 'Sentimental, sweet, and deeply rooted.',
+    strengths: ['Loyal', 'Consistent', 'Rooted in tradition'],
+    weaknesses: ['Resistant to change', 'Slow to act'],
+    goesWellWith: 'Dumpling',
+    clashesWith: 'Garlic Prawn',
+    lines: [
+      'Knows every auntie’s age and zodiac',
+      'Refuses to change reunion menu',
+      'Believes pineapple tarts “not as good as last year”',
+      'Still uses Facebook... actively',
+      'Has a drawer full of recycled angpao packets'
+    ],
+  },
+  garlicPrawn: {
+    name: 'Garlic Prawn',
+    emoji: '🧄',
+    role: 'The Unexpected Star',
+    description: 'Mysterious, sharp, and strangely addictive.',
+    strengths: ['Witty', 'Independent', 'Edgy'],
+    weaknesses: ['Emotionally distant', 'Unpredictable'],
+    goesWellWith: 'Roast Meat',
+    clashesWith: 'Nian Gao',
+    lines: [
+      'Shows up late but slays',
+      'Drops one-liners that haunt you',
+      'Secretly wins the family card game',
+      'Doesn’t follow trends — is the trend',
+      'Probably has a secret side hustle'
+    ],
+  }
+};
+
+export default function CNYDishQuiz() {
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [answers, setAnswers] = useState([]);
+  const [result, setResult] = useState(null);
+
+  const handleAnswer = (type) => {
+    const newAnswers = [...answers, type];
+    if (currentQuestion + 1 < questions.length) {
+      setCurrentQuestion(currentQuestion + 1);
+      setAnswers(newAnswers);
+    } else {
+      const counts = newAnswers.reduce((acc, val) => {
+        acc[val] = (acc[val] || 0) + 1;
+        return acc;
+      }, {});
+      const topType = Object.entries(counts).sort((a, b) => b[1] - a[1])[0][0];
+      setResult(results[topType]);
+    }
+  };
+
+  const restartQuiz = () => {
+    setCurrentQuestion(0);
+    setAnswers([]);
+    setResult(null);
+  };
+
+  return (
+    <div className="max-w-2xl mx-auto p-6 text-center">
+      {!result ? (
+        <div>
+          <h1 className="text-3xl font-bold mb-6">What CNY Dish Are You?</h1>
+          {questions.length > 0 && <p className="mb-6">{questions[currentQuestion].text}</p>}
+          <div className="space-y-2">
+            {questions[currentQuestion]?.options.map((opt, idx) => (
+              <Button key={idx} className="w-full" onClick={() => handleAnswer(opt.type)}>
+                {opt.text}
+              </Button>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="text-left space-y-4">
+          <h2 className="text-3xl font-bold text-center">
+            You’re {result.emoji} {result.name} – <span className="italic">{result.role}</span>
+          </h2>
+          <p className="text-center">{result.description}</p>
+          <div>
+            <h3 className="font-semibold">✨ Personality Lines</h3>
+            <ul className="list-disc ml-5">
+              {result.lines.map((line, i) => (
+                <li key={i}>{line}</li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p><strong>🧠 Strengths:</strong> {result.strengths.join(', ')}</p>
+            <p><strong>⚠️ Weaknesses:</strong> {result.weaknesses.join(', ')}</p>
+            <p><strong>💖 Goes well with:</strong> {result.goesWellWith}</p>
+            <p><strong>🚫 Might clash with:</strong> {result.clashesWith}</p>
+          </div>
+          <div className="text-center">
+            <Button onClick={restartQuiz}>Try Again</Button>
+          </div>
+          <div className="mt-6 bg-yellow-100 p-4 rounded shadow text-center">
+            🎉 No matter your dish personality, get all your festive needs at <strong>Lotus’s Malaysia</strong>!
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
