@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>What CNY Dish Are You?</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff8e1;
+      color: #333;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .question, .result {
+      margin-bottom: 20px;
+    }
+    button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      background-color: #f44336;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #d32f2f;
+    }
+    .personality-list {
+      padding-left: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script>
+    const questions = [
+      {
+        text: "How do you act at reunion dinners?",
+        options: [
+          { text: 'Start the party and make everyone toss Yee Sang louder!', type: 'yeeSang' },
+          { text: 'Quietly help serve food and clean up', type: 'steamedFish' },
+          { text: 'Stick close to grandma and observe quietly', type: 'dumpling' },
+          { text: 'Crack jokes, eat nonstop, and stir up card games', type: 'roastMeat' },
+          { text: 'Hand out well-prepared angpao packets with a checklist', type: 'pineappleTart' },
+          { text: 'Make sure everyone is included, even random cousins', type: 'hotpot' },
+          { text: 'Do everything just like we did last year — tradition first!', type: 'nianGao' },
+          { text: 'Arrive fashionably late with mysterious vibes', type: 'garlicPrawn' }
+        ]
+      },
+      {
+        text: "Your CNY outfit style is…",
+        options: [
+          { text: 'Loud colors, statement pieces, camera-ready always', type: 'yeeSang' },
+          { text: 'Neat and proper, maybe a red polo shirt', type: 'steamedFish' },
+          { text: 'Comfy and casual — stretchy pants, always', type: 'dumpling' },
+          { text: 'Graphic tee, shades, and loud slippers', type: 'roastMeat' },
+          { text: 'Coordinated looks with accessories, maybe cheongsam', type: 'pineappleTart' },
+          { text: 'Classic, flexible — can cook or go out anytime', type: 'hotpot' },
+          { text: 'Same thing I wear every year, timeless and lucky', type: 'nianGao' },
+          { text: 'Unexpectedly cool — no one saw it coming', type: 'garlicPrawn' }
+        ]
+      }
+    ];
+
+    const results = {
+      yeeSang: {
+        name: 'Yee Sang',
+        emoji: '🥢',
+        role: 'The Charismatic Connector',
+        description: 'You bring the HUAT to the table.',
+        lines: [
+          'Toss high, scream louder — you set the tone',
+          'Always ready with an Instagram Boomerang',
+          'Starts convos with anyone (even the cat)',
+          'Thinks quiet is suspicious',
+          'Says “HUAT AHH” before every sentence'
+        ]
+      },
+      steamedFish: {
+        name: 'Steamed Fish',
+        emoji: '🐟',
+        role: 'The Grounded Harmonizer',
+        description: 'Lowkey the backbone of the reunion dinner.',
+        lines: [
+          'Balances vibes like a pro',
+          'Doesn’t say much, but people listen',
+          'Always helping behind the scenes',
+          'Refills your tea before you even notice',
+          'Brings emotional peace to the table'
+        ]
+      }
+    };
+
+    let currentQuestion = 0;
+    let answers = [];
+
+    function renderQuestion() {
+      const app = document.getElementById('app');
+      const q = questions[currentQuestion];
+      app.innerHTML = `<div class="question"><h2>${q.text}</h2></div>`;
+      q.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.innerText = opt.text;
+        btn.onclick = () => handleAnswer(opt.type);
+        app.appendChild(btn);
+      });
+    }
+
+    function handleAnswer(type) {
+      answers.push(type);
+      currentQuestion++;
+      if (currentQuestion < questions.length) {
+        renderQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      const resultType = answers.sort((a, b) =>
+        answers.filter(v => v === a).length - answers.filter(v => v === b).length
+      ).pop();
+      const res = results[resultType];
+      const app = document.getElementById('app');
+      app.innerHTML = `
+        <div class="result">
+          <h2>You are ${res.emoji} ${res.name} – <em>${res.role}</em></h2>
+          <p>${res.description}</p>
+          <h3>✨ Personality Lines:</h3>
+          <ul class="personality-list">
+            ${res.lines.map(line => `<li>${line}</li>`).join('')}
+          </ul>
+          <p style="margin-top:20px; background:#fff3cd; padding:10px; border-radius:8px;">
+            🎉 No matter your dish personality, get all your festive needs at <strong>Lotus’s Malaysia</strong>!
+          </p>
+          <button onclick="restartQuiz()">Try Again</button>
+        </div>
+      `;
+    }
+
+    function restartQuiz() {
+      currentQuestion = 0;
+      answers = [];
+      renderQuestion();
+    }
+
+    renderQuestion();
+  </script>
+</body>
+</html>
